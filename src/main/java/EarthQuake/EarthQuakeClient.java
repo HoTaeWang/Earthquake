@@ -25,6 +25,19 @@ public class EarthQuakeClient {
         }
         return answer;
     }
+
+    public ArrayList<QuakeEntry> filterByDepth(ArrayList<QuakeEntry> quakeData, double minDepth, double maxDepth){
+        ArrayList<QuakeEntry> answer = new ArrayList<QuakeEntry>();
+
+        for(QuakeEntry qe: quakeData){
+            double dDepth = qe.getDepth();
+            if((dDepth<minDepth) && (dDepth> maxDepth)){
+                answer.add(qe);
+            }
+        }
+        System.out.println(" Size = " + answer.size() );
+        return answer;
+    }
             
     public void dumpCSV(ArrayList<QuakeEntry> list){
 		System.out.println("Latitude,Longitude,Magnitude,Info");
@@ -75,21 +88,36 @@ public class EarthQuakeClient {
     
     public void closeToMe() {
         EarthQuakeParser parser = new EarthQuakeParser();
-        //String source = "data/nov20quakedata.atom";
-        String source = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.atom";
+        String source = "data/nov20quakedata.atom";
+        //String source = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.atom";
         ArrayList<QuakeEntry> list = parser.read(source);
         System.out.println("# quakes read: " + list.size());
         
         //Durham, NC
         //Location city = new Location(35.988, -78.907);
         //Bridgeport, CA
-        Location city = new Location(38.17, -118.82);
+        //Location city = new Location(38.17, -118.82);
+        // Seoul, Korea
+        Location city = new Location(37.5665, 126.9780);
         ArrayList<QuakeEntry> close = filterByDistanceFrom(list, 1000*1000, city);
         for (int k=0; k< close.size(); k++) {
             QuakeEntry entry = close.get(k);
             double distanceInMeters = city.distanceTo(entry.getLocation());
             System.out.println(distanceInMeters/1000 + " " + entry.getInfo());
         }
+    }
 
+    public void quakeOfDepth(){
+        EarthQuakeParser parser = new EarthQuakeParser();
+        String source = "data/nov20quakedata.atom";
+        //String source = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.atom";
+        ArrayList<QuakeEntry> list = parser.read(source);
+        System.out.println("# quakes read: " + list.size());
+        
+        ArrayList<QuakeEntry> depthFilter = filterByDepth(list,  -5000.0, -10000.0);
+    
+        for(QuakeEntry qe: depthFilter){
+            System.out.println(qe);
+        }
     }
 }

@@ -7,6 +7,15 @@ public class App {
 
     public static void main(String[] args) {
         EarthQuakeClient client = new EarthQuakeClient();
+        System.out.println("========================= bigQuakes > 5.0 ===================================");
         client.bigQuakes();
+        System.out.println("=============================================================================");
+        System.out.println(" Near me ");
+        client.closeToMe();
+        System.out.println("=============================================================================");
+        System.out.println(" Depth  ");
+        client.quakeOfDepth();
+        System.out.println("=============================================================================");
     }
 }
+
