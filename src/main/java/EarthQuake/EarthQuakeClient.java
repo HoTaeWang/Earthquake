@@ -3,6 +3,11 @@ package EarthQuake;
 import java.util.*;
 
 public class EarthQuakeClient {
+    public enum NamePosition{
+        START,
+        END,
+        ANY
+    }
     
     public ArrayList<QuakeEntry> filterByMagnitude(ArrayList<QuakeEntry> quakeData, double magMin) {
         ArrayList<QuakeEntry> answer = new ArrayList<QuakeEntry>();
@@ -36,6 +41,29 @@ public class EarthQuakeClient {
             }
         }
         System.out.println(" Size = " + answer.size() );
+        return answer;
+    }
+
+    public ArrayList<QuakeEntry> filterByPhrase(ArrayList<QuakeEntry> quakeData, NamePosition namePosition, String phrase){
+        ArrayList<QuakeEntry> answer = new ArrayList<QuakeEntry>();
+
+        for(QuakeEntry qe: quakeData){
+            String strInfo = qe.getInfo();
+            if(namePosition == NamePosition.START){
+                if(strInfo.startsWith(phrase)){
+                    answer.add(qe);
+                }
+            }else if(namePosition == NamePosition.END){
+                if(strInfo.endsWith(phrase)){
+                    answer.add(qe);
+                }
+            }else if(namePosition == NamePosition.ANY){
+                if(strInfo.indexOf(phrase) != (-1)){
+                    answer.add(qe);
+                }
+            }
+        }
+        System.out.println("Found "+ answer.size() + "quakes that match " + phrase + " at " + namePosition.toString());
         return answer;
     }
             
@@ -117,6 +145,22 @@ public class EarthQuakeClient {
         ArrayList<QuakeEntry> depthFilter = filterByDepth(list,  -5000.0, -10000.0);
     
         for(QuakeEntry qe: depthFilter){
+            System.out.println(qe);
+        }
+    }
+
+    public void quakeByPhrase(){
+        EarthQuakeParser parser = new EarthQuakeParser();
+        String source = "data/nov20quakedata.atom";
+
+        ArrayList<QuakeEntry> list = parser.read(source);
+        System.out.println("# quakes read: " + list.size());
+
+        //ArrayList<QuakeEntry> search = filterByPhrase(list, NamePosition.END, "California");
+        //ArrayList<QuakeEntry> search = filterByPhrase(list, NamePosition.ANY, "Can");
+        ArrayList<QuakeEntry> search = filterByPhrase(list, NamePosition.START, "Explosion");
+
+        for(QuakeEntry qe: search){
             System.out.println(qe);
         }
     }

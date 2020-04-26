@@ -16,6 +16,9 @@ public class App {
         System.out.println(" Depth  ");
         client.quakeOfDepth();
         System.out.println("=============================================================================");
+        System.out.println("Filtering by Phrase in Title");
+        System.out.println("California at end");
+        client.quakeByPhrase();
     }
 }
 
